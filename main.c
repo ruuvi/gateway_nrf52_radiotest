@@ -17,7 +17,7 @@
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
 
-#define LED_PIN 13
+#define LED_PIN 17
 #define RB_PA_CSD_PIN 22
 #define RB_PA_CRX_PIN 23
 
@@ -27,11 +27,13 @@ static uint8_t m_channel_low    = 0;                   //<-- Radio channel 0 (24
 static uint8_t m_channel_medium = 40;                  //<-- Radio channel 40 (2440 MHz).
 static uint8_t m_channel_high   = 80;                  //<-- Radio channel 80 (2480 MHz).
 
+#if 0
 static void log_init(void) {
   ret_code_t err_code = NRF_LOG_INIT(NULL);
   APP_ERROR_CHECK(err_code);
   NRF_LOG_DEFAULT_BACKENDS_INIT();
 }
+#endif
 
 static void init(void) {
     nrf_gpio_cfg (LED_PIN,
@@ -40,7 +42,7 @@ static void init(void) {
                 NRF_GPIO_PIN_NOPULL,
                 NRF_GPIO_PIN_H0H1,
                 NRF_GPIO_PIN_NOSENSE);
-  nrf_gpio_pin_clear(LED_PIN);
+  nrf_gpio_pin_set(LED_PIN);
 
   nrf_gpio_cfg (RB_PA_CSD_PIN,
                 NRF_GPIO_PIN_DIR_OUTPUT,
@@ -78,16 +80,16 @@ static void init(void) {
 
 static void test_cycle(void) {
   nrf_gpio_pin_set(RB_PA_CRX_PIN);
-  nrf_gpio_pin_clear(LED_PIN);
   radio_unmodulated_tx_carrier(m_txpower, m_mode, m_channel_low);
-  nrf_delay_ms(60000);
+  nrf_gpio_pin_clear(LED_PIN);
+  nrf_delay_ms(5000);
   radio_unmodulated_tx_carrier(m_txpower, m_mode, m_channel_medium);
-  nrf_delay_ms(60000);
+  nrf_delay_ms(5000);
   radio_unmodulated_tx_carrier(m_txpower, m_mode, m_channel_high);
-  nrf_delay_ms(60000);
+  nrf_delay_ms(5000);
   nrf_gpio_pin_clear(RB_PA_CRX_PIN);
   nrf_gpio_pin_set(LED_PIN);
-  nrf_delay_ms(60000);
+  nrf_delay_ms(5000);
 }
 
 void TIMER1_IRQHandler(void) {
@@ -107,7 +109,7 @@ int main(void) {
   APP_ERROR_CHECK(err_code);
 
   init();
-  log_init();
+  //log_init();
 
   NVIC_EnableIRQ(TIMER0_IRQn);
   NVIC_EnableIRQ(TIMER1_IRQn);
