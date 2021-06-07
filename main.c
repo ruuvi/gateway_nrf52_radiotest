@@ -21,11 +21,11 @@
 #define RB_PA_CSD_PIN 22
 #define RB_PA_CRX_PIN 23
 
-static uint8_t m_mode = RADIO_MODE_MODE_Ble_1Mbit;     //<-- Radio mode. Data rate and modulation.
-static uint8_t m_txpower = RADIO_TXPOWER_TXPOWER_0dBm; //<-- Radio output power.
-static uint8_t m_channel_low    = 0;                   //<-- Radio channel 0 (2402 MHz).
-static uint8_t m_channel_medium = 40;                  //<-- Radio channel 40 (2440 MHz).
-static uint8_t m_channel_high   = 80;                  //<-- Radio channel 80 (2480 MHz).
+// static uint8_t m_mode = RADIO_MODE_MODE_Ble_1Mbit;     //<-- Radio mode. Data rate and modulation.
+// static uint8_t m_txpower = RADIO_TXPOWER_TXPOWER_0dBm; //<-- Radio output power.
+// static uint8_t m_channel_low    = 0;                   //<-- Radio channel 0 (2402 MHz).
+// static uint8_t m_channel_medium = 40;                  //<-- Radio channel 40 (2440 MHz).
+// static uint8_t m_channel_high   = 80;                  //<-- Radio channel 80 (2480 MHz).
 
 #if 0
 static void log_init(void) {
@@ -79,16 +79,6 @@ static void init(void) {
 }
 
 static void test_cycle(void) {
-  nrf_gpio_pin_set(RB_PA_CRX_PIN);
-  radio_unmodulated_tx_carrier(m_txpower, m_mode, m_channel_low);
-  nrf_gpio_pin_clear(LED_PIN);
-  nrf_delay_ms(5000);
-  radio_unmodulated_tx_carrier(m_txpower, m_mode, m_channel_medium);
-  nrf_delay_ms(5000);
-  radio_unmodulated_tx_carrier(m_txpower, m_mode, m_channel_high);
-  nrf_delay_ms(5000);
-  nrf_gpio_pin_clear(RB_PA_CRX_PIN);
-  nrf_gpio_pin_set(LED_PIN);
   nrf_delay_ms(5000);
 }
 
@@ -114,6 +104,10 @@ int main(void) {
   NVIC_EnableIRQ(TIMER0_IRQn);
   NVIC_EnableIRQ(TIMER1_IRQn);
   __enable_irq();
+
+  nrf_gpio_pin_clear(RB_PA_CRX_PIN);
+  //radio_unmodulated_tx_carrier(m_txpower, m_mode, m_channel_high);
+  nrf_gpio_pin_clear(LED_PIN);
 
   while (true) {
     test_cycle();
